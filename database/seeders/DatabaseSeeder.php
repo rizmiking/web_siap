@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
         // 2. Jalankan PelatihanSeeder
         $this->call([
             PelatihanSeeder::class,
+            PesertaSeeder::class,
+            AdministrasiSeeder::class,
         ]);
     }
 }

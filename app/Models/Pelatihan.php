@@ -33,7 +33,13 @@ class Pelatihan extends Model
         return $this->belongsTo(User::class);
     }
     public function administrasis(): HasMany
-{
-    return $this->hasMany(Administrasi::class);
-}
+    {
+        return $this->hasMany(Administrasi::class);
+    }
+
+    // Tambahkan di dalam class Pelatihan
+    public function pesertas(): HasMany
+    {
+        return $this->hasMany(Peserta::class);
+    }
 }
