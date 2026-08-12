@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
 use App\Models\Pelatihan;
+
 use Illuminate\Database\Seeder;
 
 class PelatihanSeeder extends Seeder

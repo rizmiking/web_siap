@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PelatihanController;
+use App\Http\Controllers\AdministrasiController;
 
 
 // Redirect root URL ke halaman login jika belum login
@@ -27,5 +28,12 @@ Route::middleware('auth')->group(function () {
 
     // Route Resource Pelatihan
     Route::resource('pelatihan', PelatihanController::class);
+
+    // Administrasi per Pelatihan
+    Route::get('/pelatihan/{pelatihan}/administrasi', [AdministrasiController::class, 'index'])->name('pelatihan.administrasi.index');
+    Route::post('/pelatihan/{pelatihan}/administrasi', [AdministrasiController::class, 'store'])->name('pelatihan.administrasi.store');
+    
+    Route::put('/administrasi/{administrasi}', [AdministrasiController::class, 'update'])->name('administrasi.update');
+    Route::delete('/administrasi/{administrasi}', [AdministrasiController::class, 'destroy'])->name('administrasi.destroy');
 });
 

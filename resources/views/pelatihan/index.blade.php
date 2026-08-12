@@ -5,26 +5,26 @@
 
 @section('content')
     <div x-data="{ 
-        showCreateModal: false, 
-        showEditModal: false,
-        editData: {
-            id: '',
-            nama_pelatihan: '',
-            tema: '',
-            jenis_pelatihan: '',
-            tanggal_mulai: '',
-            tanggal_selesai: '',
-            tempat: '',
-            penyelenggara: '',
-            target_peserta: '',
-            status: '',
-            deskripsi: ''
-        },
-        openEdit(item) {
-            this.editData = JSON.parse(JSON.stringify(item));
-            this.showEditModal = true;
-        }
-    }">
+            showCreateModal: false, 
+            showEditModal: false,
+            editData: {
+                id: '',
+                nama_pelatihan: '',
+                tema: '',
+                jenis_pelatihan: '',
+                tanggal_mulai: '',
+                tanggal_selesai: '',
+                tempat: '',
+                penyelenggara: '',
+                target_peserta: '',
+                status: '',
+                deskripsi: ''
+            },
+            openEdit(item) {
+                this.editData = JSON.parse(JSON.stringify(item));
+                this.showEditModal = true;
+            }
+        }">
 
         <!-- Header Section -->
         <div class="mb-4 flex justify-between items-center">
@@ -70,11 +70,15 @@
                                 <td class="p-4">
                                     <span
                                         class="px-2.5 py-1 text-xs font-semibold rounded-full 
-                                            {{ $item->status == 'Selesai' ? 'bg-emerald-100 text-emerald-800' : ($item->status == 'Berjalan' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800') }}">
+                                                    {{ $item->status == 'Selesai' ? 'bg-emerald-100 text-emerald-800' : ($item->status == 'Berjalan' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800') }}">
                                         {{ $item->status }}
                                     </span>
                                 </td>
                                 <td class="p-4 text-center space-x-2">
+                                    <a href="{{ route('pelatihan.administrasi.index', $item->id) }}"
+                                        class="text-blue-600 hover:text-blue-700 font-medium text-xs">
+                                        📁 Dokumen
+                                    </a>
                                     <a href="{{ route('pelatihan.show', $item->id) }}"
                                         class="text-slate-600 hover:text-blue-600 font-medium text-xs">Detail</a>
                                     <button @click="openEdit({{ json_encode($item) }})"
