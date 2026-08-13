@@ -8,6 +8,7 @@ use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\DashboardController;
 
 
+
 // Redirect root URL ke halaman login jika belum login
 Route::get('/', function () {
     return redirect()->route('login');
@@ -30,20 +31,29 @@ Route::middleware('auth')->group(function () {
         ->name('dashboard');
         
     // Route Resource Pelatihan
-    Route::resource('pelatihan', PelatihanController::class);
+    Route::resource('pelatihan', PelatihanController::class)->only('index', 'show');
 
-    // Administrasi per Pelatihan
+    // Akses Read-Only untuk Administrasi & Peserta 
     Route::get('/pelatihan/{pelatihan}/administrasi', [AdministrasiController::class, 'index'])->name('pelatihan.administrasi.index');
-    Route::post('/pelatihan/{pelatihan}/administrasi', [AdministrasiController::class, 'store'])->name('pelatihan.administrasi.store');
-
-    Route::put('/administrasi/{administrasi}', [AdministrasiController::class, 'update'])->name('administrasi.update');
-    Route::delete('/administrasi/{administrasi}', [AdministrasiController::class, 'destroy'])->name('administrasi.destroy');
-
-    // Peserta per Pelatihan
     Route::get('/pelatihan/{pelatihan}/peserta', [PesertaController::class, 'index'])->name('pelatihan.peserta.index');
-    Route::post('/pelatihan/{pelatihan}/peserta', [PesertaController::class, 'store'])->name('pelatihan.peserta.store');
 
-    Route::put('/peserta/{peserta}', [PesertaController::class, 'update'])->name('peserta.update');
-    Route::delete('/peserta/{peserta}', [PesertaController::class, 'destroy'])->name('peserta.destroy');
+    Route::middleware('superadmin')->group(function() {
+
+        // RESOURCE PELATIHAN: Akses Write / Mutasi Data
+        Route::resource('pelatihan', PelatihanController::class)->only(['store', 'update', 'destroy']);
+
+        // Administrasi per Pelatihan
+      
+        Route::post('/pelatihan/{pelatihan}/administrasi', [AdministrasiController::class, 'store'])->name('pelatihan.administrasi.store');
+        Route::put('/administrasi/{administrasi}', [AdministrasiController::class, 'update'])->name('administrasi.update');
+        Route::delete('/administrasi/{administrasi}', [AdministrasiController::class, 'destroy'])->name('administrasi.destroy');
+        
+        // Peserta per Pelatihan
+       
+        Route::post('/pelatihan/{pelatihan}/peserta', [PesertaController::class, 'store'])->name('pelatihan.peserta.store');   
+        Route::put('/peserta/{peserta}', [PesertaController::class, 'update'])->name('peserta.update');
+        Route::delete('/peserta/{peserta}', [PesertaController::class, 'destroy'])->name('peserta.destroy');
+
+        });
 });
 

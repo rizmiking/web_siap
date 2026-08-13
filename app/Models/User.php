@@ -2,23 +2,36 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
     /**
-     * Get the attributes that should be cast.
+     * Atribut yang dapat diisi secara massal (Mass Assignable).
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role', // Atribut role untuk otorisasi Superadmin vs Admin Viewer
+    ];
+
+    /**
+     * Atribut yang disembunyikan saat dikonversi ke Array/JSON.
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * Tipe data atribut yang di-cast secara otomatis.
      *
      * @return array<string, string>
      */
@@ -28,5 +41,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Cek apakah user adalah Superadmin (Akses Penuh)
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'superadmin';
+    }
+
+    /**
+     * Cek apakah user adalah Admin biasa (Read-Only Viewer)
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 }

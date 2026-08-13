@@ -23,6 +23,14 @@ class DatabaseSeeder extends Seeder
             'name' => 'Superadmin SIAP',
             'email' => 'admin@siap.com',
             'password' => Hash::make('password123'),
+            'role'     => 'superadmin',
+        ]);
+
+        User::create([
+            'name'     => 'Admin Viewer',
+            'email'    => 'viewer@siap.com',
+            'password' => Hash::make('password123'),
+            'role'     => 'admin',
         ]);
 
         // 2. Jalankan PelatihanSeeder

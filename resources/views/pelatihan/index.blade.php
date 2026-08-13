@@ -29,10 +29,12 @@
         <!-- Header Section -->
         <div class="mb-4 flex justify-between items-center">
             <p class="text-sm text-slate-500">Kelola dan pantau seluruh kegiatan pelatihan[cite: 1].</p>
+            @if (Auth::user()->isSuperAdmin())
             <button @click="showCreateModal = true"
                 class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition shadow-sm">
                 + Tambah Pelatihan
             </button>
+            @endif
         </div>
 
         <!-- Table Section -->
@@ -288,7 +290,7 @@
 
                                 <!-- Main Actions -->
                                 <div class="grid grid-cols-2 divide-x divide-slate-200">
-
+                                    
                                     <a href="{{ route('pelatihan.administrasi.index', $item->id) }}" class="py-3 flex items-center justify-center gap-2
                                                   text-xs font-semibold text-blue-600
                                                   hover:bg-blue-50 transition">
@@ -324,7 +326,7 @@
 
 
                                     <div class="flex items-center gap-3">
-
+                                        @if (Auth::user()->isSuperAdmin())
                                         <button @click="openEdit({{ json_encode($item) }})" class="text-[11px] font-semibold text-amber-600
                                                        hover:text-amber-700 transition">
 
@@ -345,6 +347,7 @@
                                                 Hapus
 
                                             </button>
+                                            @endif
 
                                         </form>
 
