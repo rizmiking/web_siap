@@ -1,21 +1,19 @@
 <?php
 
-use Illuminate\Foundation\Application;
-use Illuminate\Foundation\Configuration\Exceptions;
-use Illuminate\Foundation\Configuration\Middleware;
+namespace App\Http\Middleware;
 
-return Application::configure(basePath: dirname(__DIR__))
-    ->withRouting(
-        web: __DIR__.'/../routes/web.php',
-        commands: __DIR__.'/../routes/console.php',
-        health: '/up',
-    )
-    ->withMiddleware(function (Middleware $middleware) {
-        // Daftarkan alias middleware khusus di sini
-        $middleware->alias([
-            'superadmin' => \App\Http\Middleware\EnsureSuperAdmin::class,
-        ]);
-    })
-    ->withExceptions(function (Exceptions $exceptions) {
-        //
-    })->create();
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class EnsureSuperAdmin
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        if (!auth()->check() || !auth()->user()->isSuperAdmin()) {
+            return back()->with('error', 'Akses ditolak! Akun Anda tidak memiliki izin untuk melakukan aksi ini.');
+        }
+
+        return $next($request);
+    }
+}

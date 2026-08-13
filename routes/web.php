@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function () {
     // Akses Read-Only untuk Administrasi & Peserta 
     Route::get('/pelatihan/{pelatihan}/administrasi', [AdministrasiController::class, 'index'])->name('pelatihan.administrasi.index');
     Route::get('/pelatihan/{pelatihan}/peserta', [PesertaController::class, 'index'])->name('pelatihan.peserta.index');
+    // Akses untuk upload document
+    Route::put('/administrasi/{administrasi}', [AdministrasiController::class, 'update'])->name('administrasi.update');
 
     Route::middleware('superadmin')->group(function() {
 
@@ -45,7 +47,6 @@ Route::middleware('auth')->group(function () {
         // Administrasi per Pelatihan
       
         Route::post('/pelatihan/{pelatihan}/administrasi', [AdministrasiController::class, 'store'])->name('pelatihan.administrasi.store');
-        Route::put('/administrasi/{administrasi}', [AdministrasiController::class, 'update'])->name('administrasi.update');
         Route::delete('/administrasi/{administrasi}', [AdministrasiController::class, 'destroy'])->name('administrasi.destroy');
         
         // Peserta per Pelatihan

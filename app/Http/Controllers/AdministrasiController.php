@@ -43,6 +43,51 @@ class AdministrasiController extends Controller
     // Memperbarui data / Mengunggah ulang file berkas
     public function update(Request $request, Administrasi $administrasi)
     {
+        // $validated = $request->validate([
+        //     'nama' => 'required|string|max:255',
+        //     'jenis' => 'required|string|max:255',
+        //     'wajib' => 'required|boolean',
+        //     'status' => 'required|string',
+        //     'keterangan' => 'nullable|string',
+        //     'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,zip|max:5120',
+        // ]);
+
+        // if ($request->hasFile('file')) {
+        //     // Hapus file lama jika ada
+        //     if ($administrasi->file && Storage::disk('public')->exists($administrasi->file)) {
+        //         Storage::disk('public')->delete($administrasi->file);
+        //     }
+
+        //     $path = $request->file('file')->store('administrasi_files', 'public');
+        //     $validated['file'] = $path;
+        //     $validated['status'] = 'Sudah Diunggah';
+        // }
+
+        // Jika user adalah Admin Viewer (bukan Superadmin)
+        if (!auth()->user()->isSuperAdmin()) {
+            $validated = $request->validate([
+                'file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,zip|max:5120', // Wajib melampirkan file
+            ], [
+                'file.required' => 'Silakan pilih file berkas yang ingin diunggah.',
+            ]);
+
+            // Hapus file lama jika ada
+            if ($administrasi->file && Storage::disk('public')->exists($administrasi->file)) {
+                Storage::disk('public')->delete($administrasi->file);
+            }
+
+            $path = $request->file('file')->store('administrasi_files', 'public');
+
+            // Cukup perbarui file & statusnya saja
+            $administrasi->update([
+                'file' => $path,
+                'status' => 'Sudah Diunggah',
+            ]);
+
+            return back()->with('success', 'File berkas administrasi berhasil diunggah!');
+        }
+
+        // Jika user adalah Superadmin (bisa edit nama, jenis, sifat wajib, dll)
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'jenis' => 'required|string|max:255',
@@ -53,7 +98,6 @@ class AdministrasiController extends Controller
         ]);
 
         if ($request->hasFile('file')) {
-            // Hapus file lama jika ada
             if ($administrasi->file && Storage::disk('public')->exists($administrasi->file)) {
                 Storage::disk('public')->delete($administrasi->file);
             }
